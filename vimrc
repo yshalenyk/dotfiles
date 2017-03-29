@@ -5,7 +5,9 @@ let mapleader = ","
 
 " Plugins
 call plug#begin('~/.vim/plugged')
-	Plug 'tpope/vim-sensible'
+	if !has('nvim')
+		Plug 'tpope/vim-sensible'
+	endif
 	Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
 	Plug 'Valloric/python-indent' 
 	Plug 'tpope/vim-surround'
