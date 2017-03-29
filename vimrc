@@ -15,6 +15,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'majutsushi/tagbar'
 	Plug 'vim-airline/vim-airline'
 	Plug 'reedes/vim-colors-pencil'
+	"Plug 'tmhedberg/SimpylFold'
 call plug#end()
 
 " General
@@ -25,6 +26,8 @@ set visualbell
 
 " Apperiance
 set number
+set nowrap
+set cursorline
 set showmode
 set showcmd
 set bg=light
@@ -34,6 +37,12 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 "
 "set t_Co=256
+
+" Folding
+set foldenable
+set foldlevelstart=10   " open most folds by default"
+set foldnestmax=10
+set foldmethod=indent
 
 " Search 
 set hlsearch
@@ -50,19 +59,20 @@ let g:netrw_banner = 0 " disable banner on top
 let g:netrw_browse_split = 2
 let g:list_style=0
 
-
+" folding
 
 " Normal mode mappings
-nnoremap <leader>f :Vexplore<CR>
-nnoremap j gj
-nnoremap k gk
+nnoremap <Space>  za " Toggle fold
+nnoremap <leader>f :Vexplore<CR> " Toggle file manager
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-map <leader>l :set list!<CR>
+map <leader>l :set list!<CR> "show hidden
+
+
 " Commands 
-command! MakeTags !ctags -R .
-autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
-autocmd FileType python set makeprg=pylama\ --ignore\ E501\ %
+command! MakeTags !ctags -R . --python-kinds=-i
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab " No spaces
+autocmd FileType python set makeprg=pylama\ --ignore\ E501\ % " lint code
