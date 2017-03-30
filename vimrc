@@ -7,8 +7,11 @@ let mapleader = ","
 call plug#begin('~/.vim/plugged')
 	if !has('nvim')
 		Plug 'tpope/vim-sensible'
+		Plug 'maralla/completor.vim'
+	else
+		Plug 'Shougo/deoplete.nvim'
+		Plug 'zchee/deoplete-jedi'
 	endif
-	Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
 	Plug 'Valloric/python-indent' 
 	Plug 'tpope/vim-surround'
 	Plug 'jiangmiao/auto-pairs'
@@ -62,7 +65,10 @@ let g:netrw_banner = 0 " disable banner on top
 let g:netrw_browse_split = 2
 let g:list_style=0
 
-" folding
+" Plugins
+let g:easytags_async = 1
+let g:ycm_min_num_of_chars_for_completion = 3
+let g:ycm_min_num_identifier_candidate_chars = 2
 
 " Normal mode mappings
 nnoremap <Space>  za " Toggle fold
