@@ -17,6 +17,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'majutsushi/tagbar'
 	Plug 'vim-airline/vim-airline'
 	Plug 'reedes/vim-colors-pencil'
+	Plug 'tomtom/tcomment_vim'
 	"Plug 'tmhedberg/SimpylFold'
 call plug#end()
 
