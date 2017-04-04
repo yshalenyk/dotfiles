@@ -37,7 +37,7 @@ set cursorline
 set showmode
 set showcmd
 set bg=light
-colorscheme pencil
+colorscheme darkblue
 let g:airline_theme = 'pencil'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -82,6 +82,6 @@ map <leader>l :set list!<CR> "show hidden
 
 
 " Commands 
-command! MakeTags !ctags -R . --python-kinds=-i
+command! MakeTags !ctags -R --python-kinds=-i . 
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab " No spaces
 autocmd FileType python set makeprg=pylama\ --ignore\ E501\ % " lint code
