@@ -17,8 +17,7 @@
                      xclip
                      rust-mode
                      gruvbox-theme
-                     powerline
-                     powerline-evil
+                     smart-mode-line
                      company
                      company-jedi
                      yafolding
@@ -103,8 +102,7 @@
 (tool-bar-mode -1)
 (set-frame-font "Source Code Pro-10")
 (setq inhibit-startup-message t)
-(require 'powerline)
-(powerline-default-theme)
+(sml/setup)
 (global-hl-line-mode 1)
 
 ;;; Backups placing
