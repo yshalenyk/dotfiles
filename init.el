@@ -14,6 +14,7 @@
 (setq package-list '(evil
                      evil-leader
                      evil-org
+                     evil-surround
                      xclip
                      rust-mode
                      gruvbox-theme
@@ -55,6 +56,8 @@
 
 
 ;;; Vim emulation
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 ;;; evil-org
 (require 'evil-org)
 
@@ -103,6 +106,7 @@
 (set-frame-font "Source Code Pro-10")
 (setq inhibit-startup-message t)
 (sml/setup)
+(setq sml/theme 'respectful)
 (global-hl-line-mode 1)
 
 ;;; Backups placing
