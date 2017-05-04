@@ -108,6 +108,7 @@
 (sml/setup)
 (setq sml/theme 'respectful)
 (global-hl-line-mode 1)
+(setq-default 'truncate-lines t)
 
 ;;; Backups placing
 (setq
