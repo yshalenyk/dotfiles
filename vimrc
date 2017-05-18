@@ -1,17 +1,21 @@
 set nocompatible
-" Map leader
-let mapleader = ","
 
 
-" Plugins
+" Plugins:
 call plug#begin('~/.vim/plugged')
 	if !has('nvim')
 		Plug 'tpope/vim-sensible'
-		Plug 'maralla/completor.vim'
+		Plug 'vim-syntastic/syntastic'
+		Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
+
 	else
 		Plug 'Shougo/deoplete.nvim'
 		Plug 'zchee/deoplete-jedi'
 	endif
+	Plug 'junegunn/goyo.vim'
+	Plug 'mattn/emmet-vim'
+	Plug 'Konfekt/FastFold'
+	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 	Plug 'Valloric/python-indent' 
 	Plug 'tpope/vim-surround'
 	Plug 'jiangmiao/auto-pairs'
@@ -21,6 +25,8 @@ call plug#begin('~/.vim/plugged')
 	Plug 'vim-airline/vim-airline'
 	Plug 'reedes/vim-colors-pencil'
 	Plug 'tomtom/tcomment_vim'
+	Plug 'tshirtman/vim-cython'
+	Plug 'morhetz/gruvbox'
 	"Plug 'tmhedberg/SimpylFold'
 call plug#end()
 
@@ -36,9 +42,9 @@ set nowrap
 set cursorline
 set showmode
 set showcmd
-set bg=light
-colorscheme darkblue
-let g:airline_theme = 'pencil'
+set bg=dark
+colorscheme gruvbox
+let g:airline_theme = 'gruvbox'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 "
@@ -46,7 +52,7 @@ let g:airline_right_sep=''
 
 " Folding
 set foldenable
-set foldlevelstart=10   " open most folds by default"
+"set foldlevelstart=10   " open most folds by default"
 set foldnestmax=10
 set foldmethod=indent
 
@@ -67,21 +73,97 @@ let g:list_style=0
 
 " Plugins
 let g:easytags_async = 1
+let g:easytags_file = '~/.vim/tags'
+
 let g:ycm_min_num_of_chars_for_completion = 3
 let g:ycm_min_num_identifier_candidate_chars = 2
 
 " Normal mode mappings
 nnoremap <Space>  za " Toggle fold
-nnoremap <leader>f :Vexplore<CR> " Toggle file manager
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+nnoremap <c-q> :close<CR> 
 
+
+nnoremap  <F2> :FZF<CR>
+nnoremap <F3> :TagbarToggle<CR> 
+
+nnoremap <C-PAGEUP> :tabprevious <CR> 
+nnoremap <C-PAGEDOWN> :tabnext <CR> 
+
+
+nnoremap <C-Left> :tabprevious <CR> 
+nnoremap <C-Right> :tabnext <CR> 
+
+
+" Leader:
+let mapleader = ","
+nnoremap <leader>f :Vexplore<CR> " Toggle file manager
 map <leader>l :set list!<CR> "show hidden
 
 
-" Commands 
+" Commands:
 command! MakeTags !ctags -R --python-kinds=-i . 
+
+" Filetypes:
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab " No spaces
 autocmd FileType python set makeprg=pylama\ --ignore\ E501\ % " lint code
+
+
+"au BufAdd,BufNewFile * nested tab sball
+
+let g:airline#extensions#tabline#enabled = 1
+
+
+let g:syntastic_check_on_open = 1
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+" GUI:
+if has('gui_running')
+	"set guioptions-=m  "menu bar
+	"set guioptions-=T  "toolbar
+	"set guioptions-=r  "scrollbar"
+	let g:fzf_launcher = 'konsole -e bash -ic %s'
+	set guioptions=i
+	set guifont=Source\ Code\ Pro\ 10
+endif
+
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~40%' }
+
+
+let g:tagbar_type_rust = {
+    \ 'ctagstype' : 'rust',
+    \ 'kinds' : [
+        \'T:types,type definitions',
+        \'f:functions,function definitions',
+        \'g:enum,enumeration names',
+        \'s:structure names',
+        \'m:modules,module names',
+        \'c:consts,static constants',
+        \'t:traits,traits',
+        \'i:impls,trait implementations',
+    \]
+    \}
+
+
+
+let g:tex_fold_enabled=1
+let g:vimsyn_folding='af'
+let g:python_fold = 1
+
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+
+"let g:user_emmet_leader_key='<C-l>'
