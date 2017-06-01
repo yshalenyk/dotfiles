@@ -2,9 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-
+(defvar custom-file-path "~/.emacs.d/custom.el" )
 ;;; disable init.el modifying by custom system
-(setq custom-file "~/.emacs.d/custom.el")
+(if (not (file-exists-p custom-file-path))
+    (write-region "" "" custom-file-path))
+(setq custom-file custom-file-path)
 (load custom-file)
 
 ;;; Import a package
@@ -16,16 +18,15 @@
                      evil-org
                      evil-surround
                      xclip
+                     helm
                      rust-mode
                      gruvbox-theme
                      smart-mode-line
                      company
                      company-jedi
+                     company-racer
                      yafolding
                      flycheck
-                     ido-vertical-mode
-                     flx-ido
-                     smex
                      git-gutter
                      rainbow-delimiters
                     ))
@@ -34,7 +35,6 @@
 ;;(add-to-list 'load-path "~/.emacs.d/custom"
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
 ;;; activate all the packages (in particular autoloads)
 (package-initialize)
 
@@ -47,13 +47,19 @@
     (unless (package-installed-p package)
 	  (package-install package)))
 
+;;; helm configuration
+(require 'helm-config)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(helm-mode 1)
+
 ;;; enables copy and paste in terminal
 (xclip-mode 1)
 
 ;;; yafolding activation
 (require 'yafolding)
 (yafolding-mode t)
-
 
 ;;; Vim emulation
 (require 'evil-surround)
@@ -79,36 +85,25 @@
 (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
 
+
+(define-key evil-normal-state-map (kbd "C-P") 'helm-M-x)
+
 ;; git highlightings
 (require 'git-gutter)
 (global-git-gutter-mode t)
 
-;;;;; Interactive do things
-(require 'ido)
-(require 'ido-vertical-mode)
-(require 'smex)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-(ido-vertical-mode 1)
-(flx-ido-mode 1)
-(setq ido-use-faces nil)
-(smex-initialize)
-(setq smex-prompt-string ">> ")
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;;;;; Apperiance settings
 (load-theme 'gruvbox t)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(set-frame-font "Source Code Pro-10")
+(set-frame-font "Source Code Pro-12")
 (setq inhibit-startup-message t)
 (sml/setup)
 (setq sml/theme 'respectful)
 (global-hl-line-mode 1)
-(setq-default 'truncate-lines t)
+(setq-default truncate-lines t)
 
 ;;; Backups placing
 (setq
@@ -134,45 +129,35 @@
 (require 'rainbow-delimiters)
 
 
-;;;;functions
-;;(defun duplicate-line()
-;;  (interactive)
-;;  (move-beginning-of-line 1)
-;;  (kill-line)
-;;  (yank)
-;;  (open-line 1)
-;;  (next-line 1)
-;;  (yank)
-;;  )
-;;
-(defun for-prog/python-mode-hook ()
-  (add-to-list 'company-backends 'company-jedi))
-(defun for-prog/checking ()
-  (global-flycheck-mode))
+;;; syntax checking
+(eval-after-load 'flycheck
+  '(progn
+	 (global-flycheck-mode)))
+
+;;; autocomplete
+(setq company-idle-delay 0)
+(setq-default c-basic-offset 4)
 
 (eval-after-load 'company
   '(progn
+     (define-key company-active-map [tab] 'company-select-next)
      (define-key company-active-map (kbd "TAB") 'company-select-next)
-     (define-key company-active-map [tab] 'company-select-next)))
+     (add-to-list 'company-backends 'company-racer)
+     (add-to-list 'company-backends 'company-jedi)
+     ))
 
 ;;;;; mappings
-;;(evil-leader/set-key "a" 'duplicate-line)
-(evil-leader/set-key "b" 'ido-switch-buffer)
-(evil-leader/set-key "f" 'ido-find-file)
 (evil-leader/set-key "t" 'undo-tree-visualize)
 (evil-leader/set-key "k" 'kill-buffer)
-(evil-leader/set-key "x" 'smex-major-mode-commands)
 (evil-leader/set-key "d" 'dired)
 
 ;;; folding
 (define-key evil-normal-state-map (kbd "SPC") 'yafolding-toggle-element)
 
 
+
 ;;; Code: Hooks
 (add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'python-mode-hook 'for-prog/python-mode-hook)
-(add-hook 'after-init-hook 'for-prog/checking)
 (add-hook 'org-mode-hook 'evil-org-mode)
 
-(setq company-dabbrev-downcase 0)
-(setq company-idle-delay 0)
+;;; init.el ends here
