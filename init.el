@@ -31,11 +31,12 @@
                      yafolding
                      yasnippet
                      flycheck
+		     fzf
                      git-gutter
                      neotree
                      all-the-icons
                      rainbow-delimiters
-
+                     busybee-theme
                     ))
 
 ;;; list the repositories containing them
@@ -64,6 +65,11 @@
 
 ;;; enables copy and paste in terminal
 (xclip-mode 1)
+(setq company-dabbrev-downcase 0)
+(setq company-idle-delay 0)
+
+
+
 
 ;;; yafolding activation
 (require 'yafolding)
@@ -93,6 +99,7 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
+(define-key evil-normal-state-map (kbd "C-p") 'fzf)
 
 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
@@ -107,13 +114,14 @@
 
 
 ;;;;; Apperiance settings
-(load-theme 'gruvbox t)
+(load-theme 'busybee t)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (set-frame-font "Source Code Pro-12")
 (setq inhibit-startup-message t)
 (setq company-selection-wrap-around t)
+(setq sml/no-confirm-load-theme t)
 (sml/setup)
 (setq sml/theme 'respectful)
 (global-hl-line-mode 1)
@@ -187,4 +195,7 @@
 
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 (require 'all-the-icons)
+(setq js-indent-level 2)
+
+(global-set-key (kbd "C-p") 'fzf)
 ;;; init.el ends here

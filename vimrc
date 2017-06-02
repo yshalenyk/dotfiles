@@ -52,7 +52,7 @@ let g:airline_right_sep=''
 
 " Folding
 set foldenable
-"set foldlevelstart=10   " open most folds by default"
+set foldlevelstart=10   " open most folds by default"
 set foldnestmax=10
 set foldmethod=indent
 
