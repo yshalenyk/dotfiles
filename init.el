@@ -6,6 +6,7 @@
 ;;; disable init.el modifying by custom system
 (if (not (file-exists-p custom-file-path))
     (write-region "" "" custom-file-path))
+
 (setq custom-file custom-file-path)
 (load custom-file)
 
@@ -26,6 +27,7 @@
                      company-jedi
                      company-racer
                      yafolding
+                     yasnippet
                      flycheck
                      git-gutter
                      rainbow-delimiters
@@ -123,7 +125,6 @@
 (setq linum-format "%4d \u2502 ") ;;; for terminal
 (delete-selection-mode 1)
 (setq-default indent-tabs-mode -1)
-(setq-default tab-width 4)
 
 ;;; pretty lisp
 (require 'rainbow-delimiters)
@@ -137,6 +138,8 @@
 ;;; autocomplete
 (setq company-idle-delay 0)
 (setq-default c-basic-offset 4)
+(setq-default company-dabbrev-downcase nil)
+
 
 (eval-after-load 'company
   '(progn
@@ -151,7 +154,7 @@
 (evil-leader/set-key "k" 'kill-buffer)
 (evil-leader/set-key "d" 'dired)
 
-;;; folding
+;;; Code: folding
 (define-key evil-normal-state-map (kbd "SPC") 'yafolding-toggle-element)
 
 
@@ -159,5 +162,14 @@
 ;;; Code: Hooks
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'org-mode-hook 'evil-org-mode)
+
+;;; Code: templates
+(require 'yasnippet)
+(yas-reload-all)
+(add-hook 'prog-mode-hook #'yas-minor-mode)
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+(define-key yas-minor-mode-map (kbd "C-'") 'yas-expand)
+
 
 ;;; init.el ends here
