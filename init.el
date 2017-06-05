@@ -30,6 +30,8 @@
                      yasnippet
                      flycheck
                      git-gutter
+                     neotree
+                     all-the-icons
                      rainbow-delimiters
                     ))
 
@@ -37,6 +39,7 @@
 ;;(add-to-list 'load-path "~/.emacs.d/custom"
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
 ;;; activate all the packages (in particular autoloads)
 (package-initialize)
 
@@ -86,7 +89,10 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
-
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
 
 (define-key evil-normal-state-map (kbd "C-P") 'helm-M-x)
 
@@ -171,5 +177,6 @@
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (define-key yas-minor-mode-map (kbd "C-'") 'yas-expand)
 
-
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(require 'all-the-icons)
 ;;; init.el ends here
