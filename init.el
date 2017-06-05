@@ -84,11 +84,13 @@
 ;;; Splits
 (evil-leader/set-key "v" 'split-window-right)
 (evil-leader/set-key "s" 'split-window-below)
+
 (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
+
 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
 (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
@@ -158,7 +160,7 @@
 ;;;;; mappings
 (evil-leader/set-key "t" 'undo-tree-visualize)
 (evil-leader/set-key "k" 'kill-buffer)
-(evil-leader/set-key "d" 'dired)
+(evil-leader/set-key "d" 'neotree)
 
 ;;; Code: folding
 (define-key evil-normal-state-map (kbd "SPC") 'yafolding-toggle-element)
