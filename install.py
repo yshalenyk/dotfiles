@@ -11,13 +11,21 @@ INSTALL = [
     'adobe-source-sans-pro-fonts',
     'adobe-source-serif-pro-fonts',
     'adobe-source-code-pro-fonts',
+    'python-devel',
+    'python3-devel',
+    'automake',
+    'gcc',
+    'gcc-c++',
+    'kernel-devel',
+    'cmake',
     'wget',
     'vim',
+    'ctags',
+    'cmake',
     'emacs',
     'git',
     'tmux',
     'wget',
-    'telegram-desktop',
     'telegram-desktop',
     'zlib-devel',
     'bzip2',
@@ -70,3 +78,4 @@ if __name__ == '__main__':
     install_packages()
     remove_packages()
     install_pyenv()
+    
