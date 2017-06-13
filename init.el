@@ -24,8 +24,10 @@
                      gruvbox-theme
                      smart-mode-line
                      company
-                     company-jedi
+;;                     company-jedi
+		     company-anaconda
                      company-racer
+		     company-quickhelp
                      yafolding
                      yasnippet
                      flycheck
@@ -33,6 +35,7 @@
                      neotree
                      all-the-icons
                      rainbow-delimiters
+
                     ))
 
 ;;; list the repositories containing them
@@ -110,10 +113,12 @@
 (tool-bar-mode -1)
 (set-frame-font "Source Code Pro-12")
 (setq inhibit-startup-message t)
+(setq company-selection-wrap-around t)
 (sml/setup)
 (setq sml/theme 'respectful)
 (global-hl-line-mode 1)
 (setq-default truncate-lines t)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;; Backups placing
 (setq
@@ -154,7 +159,8 @@
      (define-key company-active-map [tab] 'company-select-next)
      (define-key company-active-map (kbd "TAB") 'company-select-next)
      (add-to-list 'company-backends 'company-racer)
-     (add-to-list 'company-backends 'company-jedi)
+     (add-to-list 'company-backends 'company-anaconda)
+     (company-quickhelp-mode 1)
      ))
 
 ;;;;; mappings
@@ -170,7 +176,7 @@
 ;;; Code: Hooks
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'org-mode-hook 'evil-org-mode)
-
+(add-hook 'python-mode-hook 'anaconda-mode)
 ;;; Code: templates
 (require 'yasnippet)
 (yas-reload-all)
