@@ -3,17 +3,14 @@ set nocompatible
 
 " Plugins:
 call plug#begin('~/.vim/plugged')
+	Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
 	if !has('nvim')
 		Plug 'tpope/vim-sensible'
 		Plug 'vim-syntastic/syntastic'
-		Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
-
-	else
-		Plug 'Shougo/deoplete.nvim'
-		Plug 'zchee/deoplete-jedi'
 	endif
 	Plug 'junegunn/goyo.vim'
 	Plug 'mattn/emmet-vim'
+	Plug 'flazz/vim-colorschemes'
 	Plug 'Konfekt/FastFold'
 	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 	Plug 'Valloric/python-indent' 
@@ -43,8 +40,8 @@ set cursorline
 set showmode
 set showcmd
 set bg=dark
-colorscheme gruvbox
-let g:airline_theme = 'gruvbox'
+colorscheme busybee
+let g:airline_theme = 'dark'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 "
@@ -68,7 +65,7 @@ let g:netrw_liststyle = 3
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
 let g:netrw_banner = 0 " disable banner on top
-let g:netrw_browse_split = 2
+"let g:netrw_browse_split = 2
 let g:list_style=0
 
 " Plugins
