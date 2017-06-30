@@ -9,6 +9,7 @@ call plug#begin('~/.vim/plugged')
 		Plug 'vim-syntastic/syntastic'
 	endif
 	Plug 'junegunn/goyo.vim'
+	Plug 'pearofducks/ansible-vim'
 	Plug 'mattn/emmet-vim'
 	Plug 'flazz/vim-colorschemes'
 	Plug 'Konfekt/FastFold'
