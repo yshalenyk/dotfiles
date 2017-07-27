@@ -6,8 +6,8 @@ call plug#begin('~/.vim/plugged')
 	Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
 	if !has('nvim')
 		Plug 'tpope/vim-sensible'
-		Plug 'vim-syntastic/syntastic'
 	endif
+	Plug 'vim-syntastic/syntastic'
 	Plug 'junegunn/goyo.vim'
 	Plug 'pearofducks/ansible-vim'
 	Plug 'mattn/emmet-vim'
