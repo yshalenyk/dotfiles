@@ -14,18 +14,14 @@
 (require 'package)
 
 ;;; Plugins list
-(setq package-list '(evil
-                     evil-leader
-                     evil-org
-                     evil-surround
-                     xclip
+(setq package-list '(xclip
                      helm
                      rust-mode
                      gruvbox-theme
                      smart-mode-line
                      company
-;;                     company-jedi
-		     company-anaconda
+                     company-jedi
+		     ;;company-anaconda
                      company-racer
 		     company-quickhelp
                      yafolding
@@ -56,57 +52,16 @@
     (unless (package-installed-p package)
 	  (package-install package)))
 
-;;; helm configuration
-(require 'helm-config)
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(helm-mode 1)
-
 ;;; enables copy and paste in terminal
 (xclip-mode 1)
 (setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
 
 
-
-
 ;;; yafolding activation
 (require 'yafolding)
 (yafolding-mode t)
 
-;;; Vim emulation
-(require 'evil-surround)
-(global-evil-surround-mode 1)
-;;; evil-org
-(require 'evil-org)
-
-;;; Vim leader
-(require 'evil-leader)
-(global-evil-leader-mode)
-(evil-leader/set-leader ",")
-
-;;; Enable plugin
-(require 'evil)
-(evil-mode t)
-
-;;; Splits
-(evil-leader/set-key "v" 'split-window-right)
-(evil-leader/set-key "s" 'split-window-below)
-
-(define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-(define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
-(define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
-(define-key evil-normal-state-map (kbd "C-p") 'fzf)
-
-(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
-(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-
-(define-key evil-normal-state-map (kbd "C-P") 'helm-M-x)
 
 ;; git highlightings
 (require 'git-gutter)
@@ -167,24 +122,14 @@
      (define-key company-active-map [tab] 'company-select-next)
      (define-key company-active-map (kbd "TAB") 'company-select-next)
      (add-to-list 'company-backends 'company-racer)
-     (add-to-list 'company-backends 'company-anaconda)
+     (add-to-list 'company-backends 'company-jedi)
      (company-quickhelp-mode 1)
      ))
-
-;;;;; mappings
-(evil-leader/set-key "t" 'undo-tree-visualize)
-(evil-leader/set-key "k" 'kill-buffer)
-(evil-leader/set-key "d" 'neotree)
-
-;;; Code: folding
-(define-key evil-normal-state-map (kbd "SPC") 'yafolding-toggle-element)
-
 
 
 ;;; Code: Hooks
 (add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'org-mode-hook 'evil-org-mode)
-(add-hook 'python-mode-hook 'anaconda-mode)
+
 ;;; Code: templates
 (require 'yasnippet)
 (yas-reload-all)
@@ -197,5 +142,5 @@
 (require 'all-the-icons)
 (setq js-indent-level 2)
 
-(global-set-key (kbd "C-p") 'fzf)
+(global-set-key (kbd "C-'") 'fzf)
 ;;; init.el ends here
