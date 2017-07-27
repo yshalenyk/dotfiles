@@ -20,6 +20,8 @@
                      smart-mode-line
                      company
                      company-jedi
+		     flx
+		     flx-ido
 		     ido-vertical-mode
 		     smex
 		     ;;company-anaconda
@@ -108,15 +110,20 @@
 
 
 ;;; interactive do
+
 (require 'ido)
 (require 'ido-vertical-mode)
 (require 'smex)
+(require 'flx-ido)
 (smex-initialize)
 (ido-mode 't)
 (ido-everywhere 't)
 (ido-vertical-mode t)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
