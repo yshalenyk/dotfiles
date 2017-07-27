@@ -15,7 +15,6 @@
 
 ;;; Plugins list
 (setq package-list '(xclip
-                     helm
                      rust-mode
                      gruvbox-theme
                      smart-mode-line
