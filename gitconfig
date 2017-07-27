@@ -1,0 +1,9 @@
+[user]
+	name = Yaroslav Shalenyk
+	email = yshalenyk@gmail.com
+[alias]
+	st = status
+	co = checkout
+	ci = commit
+	br = branch
+	lg = log --graph --all  --decorate --oneline
