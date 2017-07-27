@@ -20,6 +20,8 @@
                      smart-mode-line
                      company
                      company-jedi
+		     ido-vertical-mode
+		     smex
 		     ;;company-anaconda
                      company-racer
 		     company-quickhelp
@@ -105,6 +107,22 @@
 (require 'rainbow-delimiters)
 
 
+;;; interactive do
+(require 'ido)
+(require 'ido-vertical-mode)
+(require 'smex)
+(smex-initialize)
+(ido-mode 't)
+(ido-everywhere 't)
+(ido-vertical-mode t)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
+
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
 ;;; syntax checking
 (eval-after-load 'flycheck
   '(progn
@@ -139,7 +157,7 @@
 
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 (require 'all-the-icons)
-(setq js-indent-level 2)
+(setq js-indent-level 4)
 
 (global-set-key (kbd "C-'") 'fzf)
 ;;; init.el ends here
