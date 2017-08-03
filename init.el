@@ -20,17 +20,19 @@
                      smart-mode-line
                      company
                      company-jedi
-		     flx
-		     flx-ido
-		     ido-vertical-mode
-		     smex
-		     ;;company-anaconda
+                     company-ycmd
                      company-racer
-		     company-quickhelp
+                     company-quickhelp
+                     flx
+                     flx-ido
+                     ido-vertical-mode
+                     smex
+                     ycmd
                      yafolding
                      yasnippet
                      flycheck
-		     fzf
+                     fzf
+                     rg
                      git-gutter
                      neotree
                      all-the-icons
@@ -45,7 +47,6 @@
 
 ;;; activate all the packages (in particular autoloads)
 (package-initialize)
-
 ;;; fetch the list of packages available
 (unless package-archive-contents
     (package-refresh-contents))
@@ -57,13 +58,18 @@
 
 ;;; enables copy and paste in terminal
 (xclip-mode 1)
-(setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
 
+(setq-default c-basic-offset 4)
+(setq-default company-dabbrev-downcase nil)
 
 ;;; yafolding activation
 (require 'yafolding)
 (yafolding-mode t)
+
+(require 'rg)
+(global-set-key (kbd "<f3>") 'rg)
+;;; Splits
 
 
 ;; git highlightings
@@ -78,7 +84,6 @@
 (tool-bar-mode -1)
 (set-frame-font "Source Code Pro-12")
 (setq inhibit-startup-message t)
-(setq company-selection-wrap-around t)
 (setq sml/no-confirm-load-theme t)
 (sml/setup)
 (setq sml/theme 'respectful)
@@ -108,6 +113,11 @@
 ;;; pretty lisp
 (require 'rainbow-delimiters)
 
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+
+(eval-after-load 'hideshow
+ '(progn
+   (global-set-key (kbd "C-+") 'hs-toggle-hiding)))
 
 ;;; interactive do
 
@@ -141,6 +151,7 @@
 (setq-default company-dabbrev-downcase nil)
 
 
+(set-variable 'ycmd-server-command '("python" "/data/yshalenyk/tools/ycmd/ycmd"))
 (eval-after-load 'company
   '(progn
      (define-key company-active-map [tab] 'company-select-next)
@@ -149,10 +160,14 @@
      (add-to-list 'company-backends 'company-jedi)
      (company-quickhelp-mode 1)
      ))
-
-
-;;; Code: Hooks
+(require 'ycmd)
+(add-hook 'after-init-hook 'global-ycmd-mode)
 (add-hook 'after-init-hook 'global-company-mode)
+(require 'company-ycmd)
+(company-ycmd-setup)
+
+
+
 
 ;;; Code: templates
 (require 'yasnippet)
@@ -167,4 +182,7 @@
 (setq js-indent-level 4)
 
 (global-set-key (kbd "C-'") 'fzf)
+
+(global-set-key (kbd "C-0") 'other-frame)
+
 ;;; init.el ends here
