@@ -3,30 +3,32 @@ set nocompatible
 
 " Plugins:
 call plug#begin('~/.vim/plugged')
-	Plug 'Valloric/YouCompleteMe', { 'do': './install.py'  }
-	if !has('nvim')
-		Plug 'tpope/vim-sensible'
-	endif
-	Plug 'vim-syntastic/syntastic'
-	Plug 'junegunn/goyo.vim'
-	Plug 'posva/vim-vue'
+	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+	Plug 'zchee/deoplete-jedi'
+	Plug 'eagletmt/neco-ghc'
+	Plug 'neovimhaskell/haskell-vim'
+
+	Plug 'w0rp/ale'
+
+
 	Plug 'pearofducks/ansible-vim'
-	Plug 'mattn/emmet-vim'
-	Plug 'flazz/vim-colorschemes'
+	Plug 'jacoborus/tender.vim'
 	Plug 'Konfekt/FastFold'
+
 	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
-	Plug 'Valloric/python-indent' 
+	Plug 'junegunn/fzf.vim'
 	Plug 'tpope/vim-surround'
+
 	Plug 'jiangmiao/auto-pairs'
 	Plug 'xolox/vim-misc'
-	Plug 'xolox/vim-easytags'
+
 	Plug 'majutsushi/tagbar'
 	Plug 'vim-airline/vim-airline'
-	Plug 'reedes/vim-colors-pencil'
 	Plug 'tomtom/tcomment_vim'
+
 	Plug 'tshirtman/vim-cython'
+
 	Plug 'morhetz/gruvbox'
-	"Plug 'tmhedberg/SimpylFold'
 call plug#end()
 
 " General
@@ -36,19 +38,23 @@ set visualbell
 "et ttyfast
 
 " Apperiance
+colorscheme tender
 set number
 set nowrap
 set cursorline
 set showmode
 set showcmd
 set bg=dark
-colorscheme busybee
 let g:airline_theme = 'dark'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
+
+" deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 "
 "set t_Co=256
-
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
 " Folding
 set foldenable
 set foldlevelstart=10   " open most folds by default"
@@ -72,10 +78,8 @@ let g:list_style=0
 
 " Plugins
 let g:easytags_async = 1
-let g:easytags_file = '~/.vim/tags'
 
-let g:ycm_min_num_of_chars_for_completion = 3
-let g:ycm_min_num_identifier_candidate_chars = 2
+let g:necoghc_use_stack = 1
 
 " Normal mode mappings
 nnoremap <Space>  za " Toggle fold
@@ -86,8 +90,11 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <c-q> :close<CR> 
 
 
-nnoremap  <F2> :FZF<CR>
-nnoremap <F3> :TagbarToggle<CR> 
+nnoremap <F2> :FZF<CR>
+nnoremap <F3> :Buffers<CR> 
+nnoremap <F4> :BTags<CR> 
+nnoremap <F5> :Tags<CR> 
+
 
 nnoremap <C-PAGEUP> :tabprevious <CR> 
 nnoremap <C-PAGEDOWN> :tabnext <CR> 
@@ -99,6 +106,8 @@ nnoremap <C-Right> :tabnext <CR>
 
 " Leader:
 let mapleader = ","
+nnoremap <leader>m :Marks<CR> 
+nnoremap <leader>w :Windows<CR> 
 nnoremap <leader>f :Vexplore<CR> " Toggle file manager
 map <leader>l :set list!<CR> "show hidden
 
@@ -108,18 +117,20 @@ command! MakeTags !ctags -R --python-kinds=-i .
 
 " Filetypes:
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab " No spaces
-autocmd FileType python set makeprg=pylama\ --ignore\ E501\ % " lint code
+autocmd FileType haskell set tabstop=4|set shiftwidth=4|set expandtab " No spaces
+autocmd FileType cabal set tabstop=4|set shiftwidth=4|set expandtab " No spaces
 
 
-"au BufAdd,BufNewFile * nested tab sball
+let g:rg_command = '
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+  \ -g "!{.git,node_modules,vendor}/*" '
+
+command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
+
 
 let g:airline#extensions#tabline#enabled = 1
-
-
-let g:syntastic_check_on_open = 1
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+let g:airline#extensions#ale#enabled = 1
 
 " GUI:
 if has('gui_running')
