@@ -5,11 +5,12 @@ set nocompatible
 call plug#begin('~/.vim/plugged')
 	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 	Plug 'zchee/deoplete-jedi'
-	Plug 'eagletmt/neco-ghc'
-	Plug 'neovimhaskell/haskell-vim'
+
+	Plug 'rust-lang/rust.vim'
+	Plug 'racer-rust/vim-racer'
 
 	Plug 'w0rp/ale'
-
+	Plug 'sebastianmarkow/deoplete-rust'
 
 	Plug 'pearofducks/ansible-vim'
 	Plug 'jacoborus/tender.vim'
@@ -91,9 +92,10 @@ nnoremap <c-q> :close<CR>
 
 
 nnoremap <F2> :FZF<CR>
-nnoremap <F3> :Buffers<CR> 
-nnoremap <F4> :BTags<CR> 
-nnoremap <F5> :Tags<CR> 
+nnoremap <F3> :F<CR> 
+nnoremap <F4> :Buffers<CR> 
+nnoremap <F5> :BTags<CR> 
+nnoremap <F6> :Tags<CR> 
 
 
 nnoremap <C-PAGEUP> :tabprevious <CR> 
@@ -132,16 +134,6 @@ command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>),
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 
-" GUI:
-if has('gui_running')
-	"set guioptions-=m  "menu bar
-	"set guioptions-=T  "toolbar
-	"set guioptions-=r  "scrollbar"
-	let g:fzf_launcher = 'konsole -e bash -ic %s'
-	set guioptions=i
-	set guifont=Source\ Code\ Pro\ 10
-endif
-
 " This is the default extra key bindings
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
@@ -175,5 +167,6 @@ let g:python_fold = 1
 
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
+let g:racer_cmd = "/home/yshalenyk/.cargo/bin/racer"
 
 "let g:user_emmet_leader_key='<C-l>'
