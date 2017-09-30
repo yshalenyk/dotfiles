@@ -1,7 +1,7 @@
 autoload -U colors zsh-mime-setup
 colors          # colors
 zsh-mime-setup  # run everything as if it's an executable
-
+bindkey -e
 ##
 # Vcs info
 ##
