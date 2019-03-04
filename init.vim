@@ -1,9 +1,9 @@
 set nocompatible
-
+set cmdheight=2
 " Plugins:
 call plug#begin('~/.vim/plugged')
   " additional languages
-	Plug 'rust-lang/rust.vim'
+  Plug 'rust-lang/rust.vim'
 	Plug 'tshirtman/vim-cython'
 
   " Tools
@@ -23,7 +23,9 @@ call plug#begin('~/.vim/plugged')
   Plug 'ncm2/ncm2-path'
   Plug 'ncm2/ncm2-tmux'
   Plug 'Shougo/neco-syntax'
+  Plug 'Shougo/echodoc.vim'
   Plug 'ncm2/ncm2-syntax'
+  Plug 'ncm2/ncm2-tagprefix'
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
   Plug 'ncm2/ncm2-vim-lsp'
@@ -46,6 +48,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'jiangmiao/auto-pairs'
 	Plug 'majutsushi/tagbar'
 	Plug 'tomtom/tcomment_vim'
+	Plug 'jreybert/vimagit'
 call plug#end()
 
 " General
@@ -162,6 +165,7 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 " Filetypes:
+autocmd BufWritePre * :%s/\s\+$//e
 autocmd BufRead,BufNewFile *.zcml setlocal filetype=xml
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab " No spaces
 autocmd FileType go set tabstop=4|set shiftwidth=4|set expandtab " No spaces
