@@ -2,187 +2,247 @@
 ;;; Commentary:
 ;;; Code:
 
-(defvar custom-file-path "~/.emacs.d/custom.el" )
-;;; disable init.el modifying by custom system
-(if (not (file-exists-p custom-file-path))
-    (write-region "" "" custom-file-path))
-
-(setq custom-file custom-file-path)
-(load custom-file)
-
-;;; Import a package
-(require 'package)
-
-;;; Plugins list
-(setq package-list '(xclip
-                     rust-mode
-                     gruvbox-theme
-                     smart-mode-line
-                     company
-                     company-jedi
-                     company-ycmd
-                     company-racer
-                     company-quickhelp
-                     flx
-                     flx-ido
-                     ido-vertical-mode
-                     smex
-                     ycmd
-                     yafolding
-                     yasnippet
-                     flycheck
-                     fzf
-                     rg
-                     git-gutter
-                     neotree
-                     all-the-icons
-                     rainbow-delimiters
-                     busybee-theme
-                    ))
-
-;;; list the repositories containing them
-;;(add-to-list 'load-path "~/.emacs.d/custom"
-;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
-;;; activate all the packages (in particular autoloads)
-(package-initialize)
-;;; fetch the list of packages available
-(unless package-archive-contents
-    (package-refresh-contents))
-
-;;; install the missing packages
-(dolist (package package-list)
-    (unless (package-installed-p package)
-	  (package-install package)))
-
-;;; enables copy and paste in terminal
-(xclip-mode 1)
-(setq company-idle-delay 0)
-
-(setq-default c-basic-offset 4)
-(setq-default company-dabbrev-downcase nil)
-
-;;; yafolding activation
-(require 'yafolding)
-(yafolding-mode t)
-
-(require 'rg)
-(global-set-key (kbd "<f3>") 'rg)
-;;; Splits
+;;; initial configuration
+(setq delete-old-versions -1 )		; delete excess backup versions silently
+(setq version-control t )		; use version control
+(setq vc-make-backup-files t )		; make backups file even when in version controlled dir
+(setq backup-directory-alist `(("." . "~/.emacs.d/backups")) ) ; which directory to put backups file
+(setq vc-follow-symlinks t )				       ; don't ask for confirmation when opening symlinked file
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)) ) ;transform backups file name
+(setq inhibit-startup-screen t )	; inhibit useless and old-school startup screen
+(setq ring-bell-function 'ignore )	; silent bell when you make a mistake
+(setq coding-system-for-read 'utf-8 )	; use utf-8 by default
+(setq coding-system-for-write 'utf-8 )
+(setq sentence-end-double-space nil)	; sentence SHOULD end with only a point.
+;; (setq-default default-fill-column 80)	; toggle wrapping text at the 80th character
+(setq initial-scratch-message "Welcome in Emacs") ; print a default message in the empty scratch buffer opened at startup
+(defalias 'yes-or-no-p 'y-or-n-p)       ; must have
+(setq-default truncate-lines t)         ; straight lines
+(global-hl-line-mode 1)                 ; highlight current line
+(set-frame-font "Source Code Pro-12")   ; set default font
 
 
-;; git highlightings
-(require 'git-gutter)
-(global-git-gutter-mode t)
-
-
-;;;;; Apperiance settings
-(load-theme 'busybee t)
+;;; Apperiance settings (minimal mode)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(set-frame-font "Source Code Pro-12")
-(setq inhibit-startup-message t)
-(setq sml/no-confirm-load-theme t)
-(sml/setup)
-(setq sml/theme 'respectful)
-(global-hl-line-mode 1)
-(setq-default truncate-lines t)
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;;; Backups placing
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "~/.saves"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
 
 
 ;;; additional editing configuration
 (electric-pair-mode 1)
 (show-paren-mode 1)
-(global-linum-mode 1)
-(setq linum-format "%4d \u2502 ") ;;; for terminal
 (delete-selection-mode 1)
 (setq-default indent-tabs-mode -1)
 
-;;; pretty lisp
-(require 'rainbow-delimiters)
 
-(add-hook 'prog-mode-hook #'hs-minor-mode)
+;;; disable init.el modifying by custom system
+(defvar custom-file-path "~/.emacs.d/custom.el" )
+(if (not (file-exists-p custom-file-path))
+    (write-region "" "" custom-file-path))
+(setq custom-file custom-file-path)
+(load custom-file)
 
-(eval-after-load 'hideshow
- '(progn
-   (global-set-key (kbd "C-+") 'hs-toggle-hiding)))
+;;; packaging
 
-;;; interactive do
+(require 'package)
+(setq package-enable-at-startup nil) ; tells emacs not to load any packages before starting up
 
-(require 'ido)
-(require 'ido-vertical-mode)
-(require 'smex)
-(require 'flx-ido)
-(smex-initialize)
-(ido-mode 't)
-(ido-everywhere 't)
-(ido-vertical-mode t)
-(setq ido-vertical-define-keys 'C-n-and-C-p-only)
-(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+;;; the following lines tell emacs where on the internet to look up
+;;; for new packages.
+(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
+                         ("gnu"       . "http://elpa.gnu.org/packages/")
+                         ("melpa"     . "https://melpa.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+(package-initialize)
+
+;;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package) ; unless it is already installed
+  (package-refresh-contents) ; updage packages archive
+  (package-install 'use-package)) ; and install the most recent version of use-package
+
+(require 'use-package) ; guess what this one does too ?
+
+
+;;; libs
+(use-package dash
+  :ensure t)
+(use-package s
+  :ensure t)
+(use-package monitor
+  :ensure t)
+
+
+;;; Setup evil
+
+;;; basic package
+(use-package evil
+  :ensure t
+  :init (setq evil-want-keybinding nil)
+  :config (evil-mode t))
+(use-package org-evil
+  :ensure t)
+(use-package evil-leader
+  :ensure t
+  :config (progn
+	    (evil-leader/set-leader "C-p")
+	    (global-evil-leader-mode)))
+
+;;; redefine keybindings
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :custom (evil-collection-setup-minibuffer t)
+  :config (evil-collection-init))
+
+;;; must have stuff from vim
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-commentary
+  :ensure t
+  :config
+  (evil-commentary-mode 1))
+
+
+;;; setup theme
+;; (use-package busybee-theme
+;;   :ensure t
+;;   :config (load-theme 'busybee t))
+(use-package gruvbox-theme
+  :ensure t
+  :config (load-theme 'gruvbox-light-soft t))
+;; (use-package base16-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'base16-default-dark t))
+;; (use-package spacemacs-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'spacemacs-dark t))
+;; (use-package gotham-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'gotham t))
+
+
+
+;;; bottom line
+(use-package smart-mode-line
+  :ensure t
+  :init (setq sml/no-confirm-load-theme t)
+  :config (progn
+	    (sml/setup)
+	    (setq sml/theme 'respectful)))
+
+;;; more colors
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;; syntax checking
-(eval-after-load 'flycheck
-  '(progn
-	 (global-flycheck-mode)))
+(use-package flycheck
+  :ensure t
+  :hook (prog-mode . flycheck-mode))
+  ;; :config (global-flycheck-mode))
+
+;;; additional languages
+(use-package rust-mode
+  :ensure t)
+(use-package yaml-mode
+  :ensure t)
+(use-package terraform-mode
+  :ensure t)
+
 
 ;;; autocomplete
-(setq company-idle-delay 0)
-(setq-default c-basic-offset 4)
-(setq-default company-dabbrev-downcase nil)
+(use-package company
+  :ensure t
+  :init (progn (setq company-idle-delay 0)
+	       (setq-default company-dabbrev-downcase nil))
+  :config (global-company-mode))
+
+;;; tooltips
+(use-package company-quickhelp
+  :ensure t
+  :after company
+  :config (company-quickhelp-mode 1))
+
+;;; language server protocol
+(use-package lsp-mode
+  :ensure t
+  :config (add-hook 'prog-mode-hook #'lsp))
+
+(use-package company-lsp
+  :ensure t
+  :after company
+  :commands company-lsp
+  :config (add-to-list 'company-backends 'company-lsp))
 
 
-(set-variable 'ycmd-server-command '("python" "/data/yshalenyk/tools/ycmd/ycmd"))
-(eval-after-load 'company
-  '(progn
-     (define-key company-active-map [tab] 'company-select-next)
-     (define-key company-active-map (kbd "TAB") 'company-select-next)
-     (add-to-list 'company-backends 'company-racer)
-     (add-to-list 'company-backends 'company-jedi)
-     (company-quickhelp-mode 1)
-     ))
-(require 'ycmd)
-(add-hook 'after-init-hook 'global-ycmd-mode)
-(add-hook 'after-init-hook 'global-company-mode)
-(require 'company-ycmd)
-(company-ycmd-setup)
+;;; copy mode for command line
+(use-package xclip
+  :ensure t
+  :config (xclip-mode 1))
 
 
+;;; better code folding
+(use-package yafolding
+  :ensure t
+  :config (progn
+	    (define-key evil-normal-state-map (kbd "SPC") 'yafolding-toggle-element)))
 
+;;; fuzzy finder
+(use-package helm
+  :ensure t
+  :init (progn
+	  (global-set-key (kbd "M-x") 'helm-M-x)
+	  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+	  (setq-default helm-M-x-fuzzy-match t)
+	  (require 'helm-config)
+	  (evil-leader/set-key
+	    "b" 'helm-buffers-list
+	    "y" 'helm-show-kill-ring
+	    "r" 'helm-register
+	    "o" 'helm-occur
+	    "T" 'helm-top
+	    "f" 'helm-find-files))
+  :config (progn
+	    (helm-mode)
+	    (helm-autoresize-mode t)))
 
-;;; Code: templates
-(require 'yasnippet)
-(yas-reload-all)
-(add-hook 'prog-mode-hook #'yas-minor-mode)
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map (kbd "C-'") 'yas-expand)
+(use-package projectile
+  :ensure t
+  :config (projectile-mode t))
 
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-(require 'all-the-icons)
-(setq js-indent-level 4)
+(use-package helm-projectile
+  :ensure t
+  :after projectile
+  :config (progn
+	    (use-package helm-rg
+	      :ensure t)
+	    ;; (global-set-key (kbd "C-p s") 'helm-projectile-rg)
+	    (evil-leader/set-key
+	      "C-s" 'helm-pojectile-rg)
+	    (evil-leader/set-key
+	      "C-p" 'helm-projectile-switch-project)
+	    (evil-leader/set-key
+	      "p" 'helm-projectile-find-file)
+	    (evil-leader/set-key
+	      "h" 'helm-apropos)
+	    (helm-projectile-on)))
 
-(global-set-key (kbd "C-'") 'fzf)
+;;; git frontend
+(use-package magit
+  :ensure t)
+(use-package evil-magit
+  :ensure t
+  :after magit
+  :config (evil-leader/set-key
+	    "m" 'magit))
 
-(global-set-key (kbd "C-0") 'other-frame)
-
+;;; TODO: dap-mode
+(provide 'init)
 ;;; init.el ends here
