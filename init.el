@@ -108,26 +108,52 @@
 
 
 ;;; setup theme
-;; (use-package busybee-theme
-;;   :ensure t
-;;   :config (load-theme 'busybee t))
+;;; still can't choose propper theme for myself
 (use-package gruvbox-theme
   :ensure t
-  :config (load-theme 'gruvbox-light-soft t))
-;; (use-package base16-theme
+  :config (load-theme 'gruvbox-dark-hard t))
+
+(use-package busybee-theme
+  :ensure t
+  :config (load-theme 'busybee t))
+;; (use-package gruvbox-theme
 ;;   :ensure t
+;;   :config (load-theme 'gruvbox-light-soft t))
+;; (use-package base16-theme
+;;   :ensure t 
 ;;   :config
-;;   (load-theme 'base16-default-dark t))
+;;   (load-theme 'base16-black-metal t))
 ;; (use-package spacemacs-theme
 ;;   :ensure t
-;;   :config
+;;   :defer t
+;;   :init
 ;;   (load-theme 'spacemacs-dark t))
+;; (use-package tao-theme
+;;   :ensure t
+;;   :defer t
+;;   :init (load-theme 'tao-yang  t))
+;; (use-package anti-zenburn-theme
+;;   :ensure t
+;;   :defer t
+;;   :init (load-theme 'anti-zenburn t))
+;; (use-package  brilliance-dull-theme
+;;   :ensure t
+;;   :defer t
+;;   :init (load-theme 'brilliance-dull t))
+
+
 ;; (use-package gotham-theme
 ;;   :ensure t
 ;;   :config
 ;;   (load-theme 'gotham t))
 
-
+;;; show key bindings in popup
+(use-package which-key
+  :ensure t
+  :config (progn
+	    (which-key-mode)
+	    (which-key-setup-side-window-bottom)
+	    (which-key-setup-minibuffer)))
 
 ;;; bottom line
 (use-package smart-mode-line
@@ -136,6 +162,13 @@
   :config (progn
 	    (sml/setup)
 	    (setq sml/theme 'respectful)))
+
+;;; line numbers
+(global-linum-mode)
+;; (use-package nlinum 
+;;   :ensure t
+;;   :config (global-nlinum-mode))
+
 
 ;;; more colors
 (use-package rainbow-delimiters
@@ -146,7 +179,7 @@
 (use-package flycheck
   :ensure t
   :hook (prog-mode . flycheck-mode))
-  ;; :config (global-flycheck-mode))
+
 
 ;;; additional languages
 (use-package rust-mode
@@ -154,6 +187,8 @@
 (use-package yaml-mode
   :ensure t)
 (use-package terraform-mode
+  :ensure t)
+(use-package nix-mode
   :ensure t)
 
 
@@ -172,13 +207,23 @@
 
 ;;; language server protocol
 (use-package lsp-mode
-  :ensure t
-  :config (add-hook 'prog-mode-hook #'lsp))
+  :commands lsp
+  :init (setq lsp-response-timeout 25)
+  :config (lsp-mode t))
+
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :after (lsp-mode)
+;;   :config (lsp-ui-mode))
+;; (use-package company-lsp :commands company-lsp)
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :init 
+;;   :config (lsp-mode t))
 
 (use-package company-lsp
   :ensure t
-  :after company
-  :commands company-lsp
+  :after (company lps-mode)
   :config (add-to-list 'company-backends 'company-lsp))
 
 
@@ -217,15 +262,21 @@
   :ensure t
   :config (projectile-mode t))
 
+(defun do-grep()
+  "Perform rg search on project."
+  (interactive)
+  (helm-projectile-rg))
+
 (use-package helm-projectile
   :ensure t
   :after projectile
   :config (progn
 	    (use-package helm-rg
 	      :ensure t)
-	    ;; (global-set-key (kbd "C-p s") 'helm-projectile-rg)
 	    (evil-leader/set-key
-	      "C-s" 'helm-pojectile-rg)
+	      "s" #'do-grep)
+	    (evil-leader/set-key
+	      "d" 'projectile-dired)
 	    (evil-leader/set-key
 	      "C-p" 'helm-projectile-switch-project)
 	    (evil-leader/set-key
@@ -243,6 +294,8 @@
   :config (evil-leader/set-key
 	    "m" 'magit))
 
+(set-frame-parameter (selected-frame) 'alpha '(90 . 30))
+(add-to-list 'default-frame-alist '(alpha . (90 . 30)))
 ;;; TODO: dap-mode
 (provide 'init)
 ;;; init.el ends here
