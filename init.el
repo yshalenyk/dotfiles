@@ -19,7 +19,10 @@
 (defalias 'yes-or-no-p 'y-or-n-p)       ; must have
 (setq-default truncate-lines t)         ; straight lines
 (global-hl-line-mode 1)                 ; highlight current line
-(set-frame-font "Source Code Pro-12")   ; set default font
+;; (setq default-frame-alist '((font . "Source Code Pro-12")))
+;; (set-frame-font "Source Code Pro-12")   ; set default font
+(set-frame-font "Noto Mono-12" t t)   ; set default font
+(setq default-frame-alist '((font . "Noto Mono-12")))
 
 
 ;;; Apperiance settings (minimal mode)
@@ -109,20 +112,25 @@
 
 ;;; setup theme
 ;;; still can't choose propper theme for myself
-(use-package gruvbox-theme
-  :ensure t
-  :config (load-theme 'gruvbox-dark-hard t))
+;; (use-package gruvbox-theme
+;;   :ensure t
+;;   :config (load-theme 'gruvbox-light-soft t))
 
-(use-package busybee-theme
-  :ensure t
-  :config (load-theme 'busybee t))
+;; (use-package busybee-theme
+;;   :ensure t
+;;   :config (load-theme 'busybee t))
 ;; (use-package gruvbox-theme
 ;;   :ensure t
 ;;   :config (load-theme 'gruvbox-light-soft t))
 ;; (use-package base16-theme
 ;;   :ensure t 
 ;;   :config
-;;   (load-theme 'base16-black-metal t))
+;;   (load-theme 'base16-zenburn t))
+(use-package kaolin-themes 
+  :ensure t 
+  :config
+  (load-theme 'kaolin-dark t))
+
 ;; (use-package spacemacs-theme
 ;;   :ensure t
 ;;   :defer t
@@ -154,6 +162,13 @@
 	    (which-key-mode)
 	    (which-key-setup-side-window-bottom)
 	    (which-key-setup-minibuffer)))
+
+
+;;; quick jump between windows 
+(use-package ace-window 
+  :ensure t
+  :config (global-set-key (kbd "C-x o") 'ace-window))
+
 
 ;;; bottom line
 (use-package smart-mode-line
@@ -245,6 +260,7 @@
   :init (progn
 	  (global-set-key (kbd "M-x") 'helm-M-x)
 	  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+	  (global-set-key (kbd "C-x C-b") 'helm-mini)
 	  (setq-default helm-M-x-fuzzy-match t)
 	  (require 'helm-config)
 	  (evil-leader/set-key
@@ -277,6 +293,8 @@
 	      "s" #'do-grep)
 	    (evil-leader/set-key
 	      "d" 'projectile-dired)
+	    (evil-leader/set-key
+	      "i" 'imenu)
 	    (evil-leader/set-key
 	      "C-p" 'helm-projectile-switch-project)
 	    (evil-leader/set-key
