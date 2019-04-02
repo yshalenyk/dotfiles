@@ -23,6 +23,7 @@
 ;; (set-frame-font "Source Code Pro-12")   ; set default font
 (set-frame-font "Noto Mono-12" t t)   ; set default font
 (setq default-frame-alist '((font . "Noto Mono-12")))
+;; (setq-default package-check-signature nil)
 
 
 ;;; Apperiance settings (minimal mode)
@@ -53,10 +54,10 @@
 
 ;;; the following lines tell emacs where on the internet to look up
 ;;; for new packages.
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
+(setq package-archives '(("org"       . "https://orgmode.org/elpa/")
+                         ("gnu"       . "https://elpa.gnu.org/packages/")
                          ("melpa"     . "https://melpa.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+                         ("marmalade" . "https://marmalade-repo.org/packages/")))
 (package-initialize)
 
 ;;; Bootstrap `use-package'
@@ -111,10 +112,19 @@
 
 
 ;;; setup theme
+;; (load-theme 'wombat)
 ;;; still can't choose propper theme for myself
 ;; (use-package gruvbox-theme
 ;;   :ensure t
 ;;   :config (load-theme 'gruvbox-light-soft t))
+;; (use-package zeno-theme 
+;;   :ensure t
+;;   :config (load-theme 'zeno t))
+(use-package material-theme
+  :ensure t
+  :config (load-theme 'material-light t))
+
+
 
 ;; (use-package busybee-theme
 ;;   :ensure t
@@ -126,10 +136,10 @@
 ;;   :ensure t 
 ;;   :config
 ;;   (load-theme 'base16-zenburn t))
-(use-package kaolin-themes 
-  :ensure t 
-  :config
-  (load-theme 'kaolin-dark t))
+;; (use-package kaolin-themes
+;;   :ensure t
+;;   :config
+;;   (load-theme 'kaolin-dark t))
 
 ;; (use-package spacemacs-theme
 ;;   :ensure t
@@ -163,6 +173,10 @@
 	    (which-key-setup-side-window-bottom)
 	    (which-key-setup-minibuffer)))
 
+;;; golden ratio
+(use-package golden-ratio
+  :ensure t
+  :config (golden-ratio-mode t))
 
 ;;; quick jump between windows 
 (use-package ace-window 
@@ -223,7 +237,7 @@
 ;;; language server protocol
 (use-package lsp-mode
   :commands lsp
-  :init (setq lsp-response-timeout 25)
+  :init (setq-default lsp-response-timeout 25)
   :config (lsp-mode t))
 
 ;; (use-package lsp-ui
