@@ -275,6 +275,10 @@
   :hook (prog-mode . lsp)
   :config (lsp-mode t))
 
+(use-package lsp-python
+  :ensure t
+  :hook (python-mode . #'lsp-python-enble))
+
 (use-package lsp-ui
   :ensure t
   :after (lsp-mode)
@@ -291,6 +295,18 @@
   :after (company)
   :config (push 'company-ansible company-backends))
 
+
+;;; debugger
+(use-package dap-mode
+  :ensure t
+  :config (dap-mode 1))
+
+(use-package dap-ui
+  :after dap-mode
+  :config (dap-ui-mode 1))
+
+(use-package dap-python
+  :config (setq dap-python-executable "python3"))
 
 ;;; copy mode for command line
 (use-package xclip
