@@ -267,15 +267,11 @@
   :hook (prog-mode . lsp)
   :config (lsp-mode t))
 
-;; (use-package lsp-ui
-;;   :ensure t
-;;   :after (lsp-mode)
-;;   :config (lsp-ui-mode))
-;; (use-package company-lsp :commands company-lsp)
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :init 
-;;   :config (lsp-mode t))
+(use-package lsp-ui
+  :ensure t
+  :after (lsp-mode)
+  :config (lsp-ui-mode))
+
 
 (use-package company-lsp
   :ensure t
