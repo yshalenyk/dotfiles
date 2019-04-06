@@ -242,8 +242,16 @@
   :ensure t)
 (use-package terraform-mode
   :ensure t)
+
 (use-package nix-mode
   :ensure t)
+
+(use-package nginx-mode
+  :ensure t)
+(use-package elm-mode
+  :ensure t
+  :after (company)
+  :config (push 'company-elm company-backends))
 
 
 ;;; autocomplete
@@ -277,7 +285,11 @@
   :ensure t
   :after (company lps-mode)
   :config (push 'company-lsp company-backends))
-  ;; :init (add-to-list 'company-backends 'company-lsp))
+
+(use-package company-ansible
+  :ensure t
+  :after (company)
+  :config (push 'company-ansible company-backends))
 
 
 ;;; copy mode for command line
