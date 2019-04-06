@@ -23,7 +23,6 @@
 ;; (set-frame-font "Source Code Pro-12")   ; set default font
 (set-frame-font "Noto Mono-12" t t)   ; set default font
 (setq default-frame-alist '((font . "Noto Mono-12")))
-;; (setq-default package-check-signature nil)
 
 
 ;;; Apperiance settings (minimal mode)
@@ -50,7 +49,8 @@
 
 (require 'package)
 (setq package-enable-at-startup nil) ; tells emacs not to load any packages before starting up
-
+(setq package-check-signature nil)   ; allow unsigned
+ 
 
 ;;; the following lines tell emacs where on the internet to look up
 ;;; for new packages.
@@ -60,12 +60,25 @@
                          ("marmalade" . "https://marmalade-repo.org/packages/")))
 (package-initialize)
 
+;; refresh
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
 ;;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package) ; unless it is already installed
   (package-refresh-contents) ; updage packages archive
   (package-install 'use-package)) ; and install the most recent version of use-package
 
 (require 'use-package) ; guess what this one does too ?
+
+
+;;; auto update packages
+(use-package auto-package-update
+   :ensure t
+   :config
+   (setq auto-package-update-delete-old-versions t
+         auto-package-update-interval 4)
+   (auto-package-update-maybe))
 
 
 ;;; libs
@@ -75,7 +88,6 @@
   :ensure t)
 (use-package monitor
   :ensure t)
-
 
 ;;; Setup evil
 
@@ -91,6 +103,7 @@
   :config (progn
 	    (evil-leader/set-leader "C-p")
 	    (global-evil-leader-mode)))
+
 
 ;;; redefine keybindings
 (use-package evil-collection
@@ -117,12 +130,15 @@
 ;; (use-package gruvbox-theme
 ;;   :ensure t
 ;;   :config (load-theme 'gruvbox-light-soft t))
+(use-package nord-theme
+  :ensure t
+  :config (load-theme 'nord t))
 ;; (use-package zeno-theme 
 ;;   :ensure t
 ;;   :config (load-theme 'zeno t))
-(use-package material-theme
-  :ensure t
-  :config (load-theme 'material-light t))
+;; (use-package material-theme
+;;   :ensure t
+;;   :config (load-theme 'material-light t))
 
 
 
@@ -178,6 +194,7 @@
   :ensure t
   :config (golden-ratio-mode t))
 
+
 ;;; quick jump between windows 
 (use-package ace-window 
   :ensure t
@@ -185,12 +202,20 @@
 
 
 ;;; bottom line
-(use-package smart-mode-line
-  :ensure t
-  :init (setq sml/no-confirm-load-theme t)
-  :config (progn
-	    (sml/setup)
-	    (setq sml/theme 'respectful)))
+;; (use-package smart-mode-line
+;;   :ensure t
+;;   :init (setq sml/no-confirm-load-theme t)
+;;   :config (progn
+;; 	    (sml/setup)
+;; 	    (setq sml/theme 'respectful)))
+(use-package doom-modeline
+      :ensure t
+      :hook (after-init . doom-modeline-mode)
+      :config (setq
+	       doom-modeline-height 10
+	       doom-modeline-icon t
+	       doom-modeline-major-mode-icon t
+	       doom-modeline-minor-modes t))
 
 ;;; line numbers
 (global-linum-mode)
@@ -236,8 +261,10 @@
 
 ;;; language server protocol
 (use-package lsp-mode
+  :ensure t
   :commands lsp
   :init (setq-default lsp-response-timeout 25)
+  :hook (prog-mode . lsp)
   :config (lsp-mode t))
 
 ;; (use-package lsp-ui
@@ -253,7 +280,8 @@
 (use-package company-lsp
   :ensure t
   :after (company lps-mode)
-  :config (add-to-list 'company-backends 'company-lsp))
+  :config (push 'company-lsp company-backends))
+  ;; :init (add-to-list 'company-backends 'company-lsp))
 
 
 ;;; copy mode for command line
@@ -313,6 +341,9 @@
 	      "C-p" 'helm-projectile-switch-project)
 	    (evil-leader/set-key
 	      "p" 'helm-projectile-find-file)
+	    (evil-leader/set-key
+	      "t" 'helm-)
+
 	    (evil-leader/set-key
 	      "h" 'helm-apropos)
 	    (helm-projectile-on)))
