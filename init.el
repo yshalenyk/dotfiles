@@ -13,9 +13,12 @@
 (setq ring-bell-function 'ignore )	; silent bell when you make a mistake
 (setq coding-system-for-read 'utf-8 )	; use utf-8 by default
 (setq coding-system-for-write 'utf-8 )
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
 (setq sentence-end-double-space nil)	; sentence SHOULD end with only a point.
 ;; (setq-default default-fill-column 80)	; toggle wrapping text at the 80th character
-(setq initial-scratch-message "Welcome in Emacs") ; print a default message in the empty scratch buffer opened at startup
+(setq initial-scratch-message
+      (format "Welcome home, %s :)" (user-login-name))) ; print a default message in the empty scratch buffer opened at startup
 (defalias 'yes-or-no-p 'y-or-n-p)       ; must have
 (setq-default truncate-lines t)         ; straight lines
 (global-hl-line-mode 1)                 ; highlight current line
@@ -212,7 +215,7 @@
       :ensure t
       :hook (after-init . doom-modeline-mode)
       :config (setq
-	       doom-modeline-height 10
+	       doom-modeline-height 15
 	       doom-modeline-icon t
 	       doom-modeline-major-mode-icon t
 	       doom-modeline-minor-modes t))
@@ -234,12 +237,19 @@
   :ensure t
   :hook (prog-mode . flycheck-mode))
 
+(use-package flycheck-elm
+  :ensure t
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+
 
 ;;; additional languages
 (use-package rust-mode
   :ensure t)
+
 (use-package yaml-mode
   :ensure t)
+
 (use-package terraform-mode
   :ensure t)
 
@@ -248,6 +258,7 @@
 
 (use-package nginx-mode
   :ensure t)
+
 (use-package elm-mode
   :ensure t
   :after (company)
@@ -375,11 +386,21 @@
 ;;; git frontend
 (use-package magit
   :ensure t)
+
 (use-package evil-magit
   :ensure t
   :after magit
   :config (evil-leader/set-key
 	    "m" 'magit))
+
+;;; fun
+
+(use-package twittering-mode
+  :ensure t
+  :config (setq
+	   twittering-icon-mode t
+	   twittering-use-icon-storage t
+	   twittering-display-remaining t))
 
 (set-frame-parameter (selected-frame) 'alpha '(90 . 30))
 (add-to-list 'default-frame-alist '(alpha . (90 . 30)))
