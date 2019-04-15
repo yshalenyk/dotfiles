@@ -92,6 +92,11 @@
 (use-package monitor
   :ensure t)
 
+;;; better org
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode))
+
 ;;; Setup evil
 
 ;;; basic package
@@ -404,6 +409,7 @@
 
 (set-frame-parameter (selected-frame) 'alpha '(90 . 30))
 (add-to-list 'default-frame-alist '(alpha . (90 . 30)))
+
 ;;; TODO: dap-mode
 (provide 'init)
 ;;; init.el ends here
