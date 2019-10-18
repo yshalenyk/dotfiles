@@ -58,6 +58,9 @@
 (setq package-enable-at-startup nil) ; tells emacs not to load any packages before starting up
 (setq package-check-signature nil)   ; allow unsigned
 
+;; use gpg2
+(setq epg-gpg-program "gpg2")
+
 
 ;;; the following lines tell emacs where on the internet to look up
 ;;; for new packages.
@@ -99,16 +102,16 @@
 
 ;;; setup theme
 
-(use-package almost-mono-themes
-  :ensure t
-  :config (load-theme 'almost-mono-white t))
+;; (use-package almost-mono-themes
+;;   :ensure t
+;;   :config (load-theme 'almost-mono-white t))
 ;; (use-package nord-theme
 ;;  :ensure t
 ;;  :config (load-theme 'nord t))
 
-;; (use-package busybee-theme
-;;   :ensure t
-;;   :config (load-theme 'busybee t))
+(use-package busybee-theme
+  :ensure t
+  :config (load-theme 'busybee t))
 
 ;; (use-package gotham-theme
 ;;   :ensure t
@@ -157,6 +160,10 @@
   (global-set-key (kbd "C-c C-c m") 'mc/edit-lines)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this))
+
+(use-package smartparens
+  :ensure t
+  :config (require 'smartparens-config))
 
 ;;; additional languages
 (use-package rust-mode
@@ -242,6 +249,9 @@
   :bind ("C-c <C-return>" . yafolding-toggle-element)
   :hook (prog-mode . yafolding-mode))
 
+(use-package helpful
+  :ensure t)
+
 ;;; fuzzy finder
 (use-package ivy
   :demand
@@ -256,19 +266,20 @@
   	  (global-set-key "\C-s" 'swiper)
   	  (global-set-key (kbd "C-c C-r") 'ivy-resume)
 	  (global-set-key (kbd "C-c s") 'counsel-rg)
-	  (global-set-key (kbd "C-x l") 'counsel-locate)
-  	  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  	  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  	  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+	  (global-set-key (kbd "C-c l") 'counsel-locate)
 	  (global-set-key (kbd "C-x C-b") 'counsel-ibuffer)
 	  (global-set-key (kbd "M-y") 'counsel-yank-pop)
+  	  (global-set-key (kbd "<f2> l") 'counsel-find-library)
   	  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
   	  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)))
 
 (use-package counsel
   :after (ivy)
   :ensure t
-  :config (counsel-mode t))
+  :config (progn
+	    (setq counsel-describe-function-function #'helpful-callable)
+	    (setq counsel-describe-variable-function #'helpful-variable)
+	    (counsel-mode t)))
 
 (use-package ivy-rich
   :ensure t
@@ -285,12 +296,21 @@
 (use-package projectile
   :ensure t
   :config (progn (projectile-mode t)
-		 (setq projectile-completion-system 'ivy)))
+		 (setq projectile-completion-system 'ivy)
+		 (global-set-key (kbd "C-c p d") 'projectile-dired-other-window)))
 
 ;;; git frontend
 (use-package magit
   :bind ("C-c g" . magit)
   :ensure t)
+
+
+(use-package pass
+  :ensure t)
+
+(use-package ivy-pass
+  :ensure t
+  :bind ("C-c C-u p" . ivy-pass))
 
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 30))
 ;;(add-to-list 'default-frame-alist '(alpha . (90 . 30)))
