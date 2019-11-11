@@ -339,7 +339,8 @@
   :ensure t
   :config (progn (projectile-mode t)
 		 (setq projectile-completion-system 'ivy)
-		 (global-set-key (kbd "C-c p d") 'projectile-dired-other-window)))
+		 (global-set-key (kbd "C-c p d") 'projectile-dired-other-window)
+		 (global-set-key (kbd "C-c p s") 'projectile-run-eshell)))
 
 ;;; git frontend
 (use-package magit
