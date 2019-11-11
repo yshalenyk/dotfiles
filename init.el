@@ -105,18 +105,42 @@
 ;; (use-package almost-mono-themes
 ;;   :ensure t
 ;;   :config (load-theme 'almost-mono-white t))
+
+(use-package eziam-theme
+    :defer t
+    :init (load-theme 'eziam-light))
+
+(use-package eziam-light-theme
+    :ensure eziam-theme)
 ;; (use-package nord-theme
 ;;  :ensure t
 ;;  :config (load-theme 'nord t))
 
-(use-package busybee-theme
+;; (use-package busybee-theme
+;;   :ensure t
+;;   :config (load-theme 'busybee t))
+
+(use-package rich-minority
   :ensure t
-  :config (load-theme 'busybee t))
+  :config (rich-minority-mode t))
+
+(use-package smart-mode-line
+  :ensure t
+  :init (setq sml/no-confirm-load-theme t) (setq sml/theme 'light)
+  :config (sml/setup))
+
+;; (use-package smart-mode-line-light-powerline-theme
+;;   :config (setq sml/theme 'powerline-light))
 
 ;; (use-package gotham-theme
 ;;   :ensure t
 ;;   :config
 ;;   (load-theme 'gotham t))
+
+
+(use-package mode-icons
+  :ensure t
+  :config (mode-icons-mode))
 
 ;;; show key bindings in popup
 (use-package which-key
@@ -135,7 +159,7 @@
 ;;; quick jump between windows
 (use-package ace-window
   :ensure t
-  :config (global-set-key (kbd "C-x C-o") 'ace-window))
+  :config (global-set-key (kbd "C-c C-o") 'ace-window))
 
 
 ;;; more colors
@@ -185,8 +209,13 @@
 (use-package company
   :ensure t
   :init (progn (setq company-idle-delay 0)
-	       (setq-default company-dabbrev-downcase nil))
+	       (setq company-dabbrev-downcase nil))
   :config (global-company-mode))
+
+
+(use-package python-pytest
+  :ensure t
+  :bind (:map python-mode-map ("C-c t" . python-pytest-popup)))
 
 ;;; tooltips
 (use-package company-quickhelp
@@ -202,9 +231,8 @@
   :hook (prog-mode . lsp)
   :config (lsp-mode t))
 
-(use-package lsp-python
-  :ensure t
-  :hook (python-mode . #'lsp-python-enble))
+;; (use-package lsp-python
+;;   :hook (python-mode . #'lsp-python-enble))
 
 (use-package lsp-ui
   :ensure t
@@ -215,6 +243,16 @@
   :ensure t
   :after (company lps-mode)
   :config (push 'company-lsp company-backends))
+
+(use-package anaconda-mode
+  :ensure t
+  :config
+  (use-package company-anaconda
+    :ensure t
+    :config (add-to-list 'company-backends 'company-anaconda))
+  (progn
+    (add-hook 'python-mode-hook 'anaconda-mode)
+    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)))
 
 (use-package company-ansible
   :ensure t
@@ -229,11 +267,15 @@
 ;;; debugger
 (use-package dap-mode
   :ensure t
-  :config (dap-mode 1))
+  :config (progn
+	    (dap-mode 1)
+	    (require 'dap-python)))
 
 (use-package dap-ui
   :after dap-mode
-  :config (dap-ui-mode 1))
+  :config (progn (tooltip-mode 1)
+		 (dap-ui-mode 1)
+		 (dap-tooltip-mode 1)))
 
 (use-package dap-python
   :config (setq dap-python-executable "python3"))
@@ -306,12 +348,43 @@
 
 
 (use-package pass
-  :ensure t)
+  :ensure t
+  :bind ("C-c C-u p" . pass))
 
 (use-package ivy-pass
-  :ensure t
-  :bind ("C-c C-u p" . ivy-pass))
+  :ensure t)
 
+;; fun
+
+(use-package md4rd
+  :ensure t
+  :config (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines))
+
+(use-package twittering-mode
+  :ensure t
+  :config (progn (setq twittering-icon-mode t) (setq twittering-reverse-mode t) ))
+
+(global-set-key (kbd "C-c C-b") 'ibuffer-other-window)
+
+(use-package smart-comment
+  :ensure t
+  :bind ("M-;" . smart-comment))
+
+
+(use-package pyenv-mode
+  :ensure t
+  :hook (python-mode . pyenv-mode)
+  :config
+  (defun projectile-pyenv-mode-set ()
+  "Set pyenv version matching project name."
+  (let ((project (projectile-project-name)))
+    (if (member project (pyenv-mode-versions))
+        (pyenv-mode-set project)
+      (pyenv-mode-unset))))
+  (add-hook 'projectile-after-switch-project-hook 'projectile-pyenv-mode-set))
+
+(use-package pyenv-mode-auto
+   :ensure t)
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 30))
 ;;(add-to-list 'default-frame-alist '(alpha . (90 . 30)))
 ;;; TODO: dap-mode
